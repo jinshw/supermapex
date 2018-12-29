@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+	<!-- 配置服务组件集合 -->
+	<componentSets>
+	</componentSets>
+	<!-- 配置服务提供者集合 -->
+	<providerSets>
+		<!-- Temperature providerSet -->
+		<providerSet name="MileagePositionProviderset">
+			<!--<provider-reference name="ugcMapProvider-China400" enabled="true"></provider-reference>-->
+			<provider-reference name="map-WS_JSJT" enabled="true"></provider-reference>
+			<provider-reference name="data-WS_JSJT" enabled="true"></provider-reference>
+			<provider-reference name="spatialAnalysis-WS_JSJT" enabled="true"></provider-reference>
+			<provider-reference name="mileagePositionProvider" enabled="true"></provider-reference>
+		</providerSet>
+	</providerSets>
+	<!-- 配置服务提供者 -->
+	<providers>
+		<!-- Temperature Provider-->
+		<provider name="mileagePositionProvider" class="com.supermap.sample.position.MileagePositionProviderImpl">
+			<!--<config class="com.supermap.sample.temperature.FileSetting">-->
+			<!--<filePath>../Temperature.txt</filePath>-->
+			<!--</config>-->
+		</provider>
+
+	</providers>
+	<!-- 配置服务组件 -->
+	<components>
+		<!-- Temperature component -->
+		<component name="MileagePosition" class="com.supermap.sample.position.MileagePositionImpl" providers="MileagePositionProviderset" interfaceNames="mileagePositionInterface">
+			<config class="com.supermap.sample.position.MileagePositionParam">
+				<!--<mapName>China</mapName>-->
+				<!--<mapName>年报高速</mapName>-->
+				<datasourceName>THEMEDATASOURCE</datasourceName>
+				<datasetName>Routes_GS_M</datasetName>
+				<datasetNameGD>Routes_GD_M</datasetNameGD>
+				<datasetNameSD>Routes_SD_M</datasetNameSD>
+				<!--oracle-->
+				<orcldriver>oracle.jdbc.driver.OracleDriver</orcldriver>
+				<orcljdbcurl>jdbc:oracle:thin:@192.168.47.128:1521:helowin</orcljdbcurl>
+				<orcluser>SJZX_ODS</orcluser>
+				<orclpassword>SJZX_ODS</orclpassword>
+			</config>
+		</component>
+	</components>
+	<!-- 配置服务接口 -->
+	<interfaces>
+		<!--Temperature Interface-->
+		<interface name="mileagePositionInterface" class="com.supermap.sample.position.MileagePositionServlet">
+		</interface>
+	</interfaces>
+</application>

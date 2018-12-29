@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <!-- 配置服务组件集合 -->
+    <componentSets>
+        <componentSet interfaceNames="realTimeTrafficInterface" name="realmileage-rest">
+            <component-reference name="RealTimeTraffic"></component-reference>
+            <component-reference name="MileagePositionRTT"></component-reference>
+        </componentSet>
+    </componentSets>
+    <!-- 配置服务提供者集合 -->
+    <providerSets>
+        <!-- Temperature providerSet -->
+        <providerSet name="RealTimeTrafficProviderset">
+            <!--<provider-reference name="ugcMapProvider-China400" enabled="true"></provider-reference>-->
+            <provider-reference name="map-XJJT_LUK" enabled="true"></provider-reference>
+            <provider-reference name="data-XJJT_LUK2" enabled="true"></provider-reference>
+            <provider-reference name="spatialAnalysis-XJJT_LUK" enabled="true"></provider-reference>
+            <provider-reference name="spatialAnalysis-road-xj" enabled="true"></provider-reference>
+            <provider-reference name="realTimeTrafficProvider" enabled="true"></provider-reference>
+        </providerSet>
+        <providerSet name="MileagePositionProvidersetRTT">
+            <!--<provider-reference name="ugcMapProvider-China400" enabled="true"></provider-reference>-->
+            <provider-reference name="map-WS_JSJT" enabled="true"></provider-reference>
+            <provider-reference name="data-WS_JSJT" enabled="true"></provider-reference>
+            <provider-reference name="spatialAnalysis-WS_JSJT" enabled="true"></provider-reference>
+            <provider-reference name="mileagePositionProviderRTT" enabled="true"></provider-reference>
+        </providerSet>
+    </providerSets>
+    <!-- 配置服务提供者 -->
+    <providers>
+        <provider class="com.supermap.services.providers.UGCMapProvider" enabled="true" name="map-XJJT_LUK">
+            <config class="com.supermap.services.providers.UGCMapProviderSetting">
+                <workspacePath>E:/supermap_onepic_yun/路况/XJJT_LUK.smwu</workspacePath>
+                <layerCountPerDataType>0</layerCountPerDataType>
+                <multiThread>true</multiThread>
+                <poolSize>0</poolSize>
+                <ugcMapSettings/>
+                <useCompactCache>false</useCompactCache>
+                <extractCacheToFile>true</extractCacheToFile>
+                <queryExpectCount>1000</queryExpectCount>
+                <ignoreHashcodeWhenUseCache>false</ignoreHashcodeWhenUseCache>
+                <cacheDisabled>false</cacheDisabled>
+                <isMultiInstance>false</isMultiInstance>
+                <inflatDisabled>false</inflatDisabled>
+            </config>
+        </provider>
+
+        <provider name="realTimeTrafficProvider" class="com.supermap.sample.traffic.RealTimeTrafficProviderImpl">
+        </provider>
+        <provider name="mileagePositionProviderRTT" class="com.supermap.sample.positiontraffic.MileagePositionProviderImpl">
+        </provider>
+    </providers>
+    <!-- 配置服务组件 -->
+    <components>
+        <!-- Temperature component -->
+        <component name="RealTimeTraffic" class="com.supermap.sample.traffic.RealTimeTrafficImpl"
+                   providers="RealTimeTrafficProviderset" interfaceNames="">
+            <config class="com.supermap.sample.traffic.RealTimeTrafficParam">
+                <workspacePath>E:/supermap_onepic_yun/路况/XJJT_LUK.smwu</workspacePath>
+                <!--<mapName>China</mapName>-->
+                <!--<mapName>年报高速</mapName>-->
+                <datasourceName>Road</datasourceName>
+                <datasetName>Rxinjiang_1_4</datasetName>
+                <colorFieldName>L_COLOR</colorFieldName>
+                <IDFieldName>ID</IDFieldName>
+                <mapNames>XJLK</mapNames>
+                <period>120000</period>
+
+                <areaCodes>650100,650200,650400,650500,652300,652700,652800,652900,653000,653100,653200,654000,654200,654300</areaCodes>
+                <!--http://newte.sh.1251225243.clb.myqcloud.com/TEGateway/123456/RTICTraffic.xml?bizcode=xjjtysxx6bc624asdb98asdhjdf12&version=1701&datatype=14&format=1&adcode={0}&kind={1}-->
+                <rticUrl>http://newte.sh.1251225243.clb.myqcloud.com/TEGateway/123456/RTICTraffic.xml?bizcode=xjjtysxx6bc624asdb98asdhjdf12&amp;version=1701&amp;datatype=14&amp;format=1&amp;adcode={0}&amp;kind={1}</rticUrl>
+                <trafficColors>5231229,5231229,16764997,15207950</trafficColors>
+                <roadKind>5</roadKind>
+                <max>10</max>
+                <!--MySQL-->
+                <mysqlDriver>com.mysql.jdbc.Driver</mysqlDriver>
+                <mysqlURL>jdbc:mysql://localhost:3306/xjone</mysqlURL>
+                <mysqlUser>root</mysqlUser>
+                <mysqlPassword>root</mysqlPassword>
+                <!--阻断路由数据，里程桩定位使用-->
+                <!--<datasourceNameRoute>road-xj</datasourceNameRoute>-->
+                <!--<datasetNameRouteGS>Routes_gs</datasetNameRouteGS>-->
+                <!--<datasetNameRouteGD>Routes_gd</datasetNameRouteGD>-->
+                <!--<datasetNameRouteSD>Routes_sd</datasetNameRouteSD>-->
+            </config>
+        </component>
+        <component class="com.supermap.services.components.impl.MapImpl" enabled="true" instanceCount="1" interfaceNames="rest" name="map-XJJT_LUK" providers="map-XJJT_LUK">
+            <config class="com.supermap.services.components.MapConfig">
+                <useCache>false</useCache>
+                <useUTFGridCache>false</useUTFGridCache>
+                <useVectorTileCache>false</useVectorTileCache>
+                <expired>0</expired>
+                <cacheReadOnly>false</cacheReadOnly>
+            </config>
+        </component>
+        <component name="MileagePositionRTT" class="com.supermap.sample.positiontraffic.MileagePositionImpl"
+                   providers="MileagePositionProvidersetRTT" interfaceNames="">
+            <config class="com.supermap.sample.positiontraffic.MileagePositionParam">
+                <!--<mapName>China</mapName>-->
+                <!--<mapName>年报高速</mapName>-->
+                <datasourceName>THEMEDATASOURCE</datasourceName>
+                <datasetName>Routes_GS_M</datasetName>
+                <datasetNameGD>Routes_GD_M</datasetNameGD>
+                <datasetNameSD>Routes_SD_M</datasetNameSD>
+                <!--组件查询配置项-->
+                <filePath>C:\Users\Administrator\Desktop\Temp\综合地图\zhdt.smwu</filePath>
+                <datasetGSObject>高速公路路段</datasetGSObject>
+                <datasetGDObject>国道路段</datasetGDObject>
+                <datasetSDObject>省道路段</datasetSDObject>
+                <datasetRouteGSObject>Routes_GS_M</datasetRouteGSObject>
+                <datasetRouteGDObject>Routes_GD_M</datasetRouteGDObject>
+                <datasetRouteSDObject>Routes_SD_M</datasetRouteSDObject>
+            </config>
+        </component>
+    </components>
+    <!-- 配置服务接口 -->
+    <interfaces>
+        <!--Temperature Interface-->
+        <interface name="realTimeTrafficInterface" class="com.supermap.sample.traffic.RealTimeTrafficServlet">
+        </interface>
+        <interface name="mileagePositionInterfaceRTT"
+                   class="com.supermap.sample.positiontraffic.MileagePositionServlet">
+        </interface>
+    </interfaces>
+</application>
