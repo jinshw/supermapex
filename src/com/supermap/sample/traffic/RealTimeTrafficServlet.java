@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import static com.supermap.sample.traffic.CommodityServer.webSocketSet;
 
 //@Interface(componentTypes = {MileagePosition.class,RealTimeTraffic.class}, optional = false, multiple = true)
 public class RealTimeTrafficServlet extends HttpServlet implements InterfaceContextAware {
@@ -75,12 +76,12 @@ public class RealTimeTrafficServlet extends HttpServlet implements InterfaceCont
         List list = null;
         if (selectedVal.equals("start") && !isExeCron) {
             isExeCron = true;
-            TimerManager.IS_EXE = true;
+            TimerManager.IS_EXE = false;
             exeCron();
             resultStr = "开始定时器执行";
         } else if (selectedVal.equals("end")) {
             isExeCron = false;
-            TimerManager.IS_EXE = false;
+            TimerManager.IS_EXE = true;
             resultStr = "停止定时器执行";
         }
 
@@ -113,6 +114,13 @@ public class RealTimeTrafficServlet extends HttpServlet implements InterfaceCont
                 }
             }
         }
+        // 执行定时器
+        if(TimerManager.IS_EXE){
+            TimerManager.IS_EXE = false;
+            isExeCron = true;
+            exeCron();
+        }
+
     }
 
     public List<XmlBean> getTrafficList() {
@@ -122,6 +130,7 @@ public class RealTimeTrafficServlet extends HttpServlet implements InterfaceCont
 
     // 定时器
     public void exeCron() {
+        System.out.println("实时路况定时器开始执行......");
         new TimerManager(0, 0, 0, m_period, false, true, new TimerTask() {
             @Override
             public void run() {
@@ -136,13 +145,25 @@ public class RealTimeTrafficServlet extends HttpServlet implements InterfaceCont
                     System.out.println("insert list size  is null ");
                 }
 
+                //websocket
+                try {
+                    for (CommodityServer webSocket : webSocketSet) {
+                        com.supermap.services.rest.util.JsonConverter js = new JsonConverter();
+                        String result = js.toFormatedObject(list).toString();
+                        webSocket.sendMessage(result);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //保存数据库中
                 realTimeTraffic.insertDatas(list);
 
 
                 System.out.println("--路况服务定时执行" + count + "次结束：" + new Date());
 
                 System.out.println("---IS_EXE---:" + TimerManager.IS_EXE);
-                if (!TimerManager.IS_EXE) {//关闭
+                if (TimerManager.IS_EXE) {//关闭
                     this.cancel();
                 }
 //                    timerExe();

@@ -22,13 +22,25 @@ public class RticTest {
     public static Map rttRoadRelMap = new HashMap();
 
     public static void main(String[] args) {
+        getXML();
+
+    }
+
+    public static void getXML() {
+        System.out.println("开始......");
+        String areaCodes = "650100,650200,650400,650500,652300,652700,652800,652900,653000,653100,653200,654000,654200,654300";
         String rticUrl = "http://newte.sh.1251225243.clb.myqcloud.com/TEGateway/123456/RTICTraffic.xml?bizcode=xjjtysxx6bc624asdb98asdhjdf12&version=1701&datatype=14&format=1&adcode={0}&kind={1}";
         String roadKind = "5";
-        String areaCodes = "650100";
+        String rttXmlString = "";
+        for (String areaCode : areaCodes.split(",")) {
+            String urlString = MessageFormat.format(rticUrl, areaCode, roadKind);
+            rttXmlString = rttXmlString + "开始------"+areaCode+"-------------"+areaCode+"------------------------------------------------------------------------------------------------------------------------------------------------------------";
+            rttXmlString = rttXmlString +  CommUtil.getDataByUrl(urlString);
+            rttXmlString = rttXmlString + "结束------"+areaCode+"======"+areaCode+"=======================-------------------------------------------------------------------------------------------------------------------------";
 
-        RticTest rticTest = new RticTest();
-        rticTest.getRttByAdcodeJson(rticUrl, areaCodes, roadKind);
-
+        }
+        FileUtils.writeStringToFile("e:\\xml.xml",rttXmlString);
+        System.out.println("结束......");
     }
 
 

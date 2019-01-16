@@ -607,6 +607,8 @@ public class RealTimeTrafficImpl implements RealTimeTraffic, ComponentContextAwa
                         }
                         recordset.setInt32(colorFieldName, color);
                     }
+                }else{
+//                    System.out.println("接口返回的id中没有和路网数据文件IDFieldName="+id+"匹配");
                 }
                 recordset.moveNext();
             }

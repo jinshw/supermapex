@@ -244,7 +244,7 @@ public class RticUtils {
                     rlist.add(xmlBeanNew);
                 }*/
             } else {
-                System.out.println("PATH==" + RticUtils.PATH);
+//                System.out.println("PATH==" + RticUtils.PATH);
                 //System.out.println("rttcLinkID==" + rttcLinkID + "   rticLinkKind==" + rticLinkKind);
             }
 
@@ -268,7 +268,14 @@ public class RticUtils {
                 Iterator jsonArrayIt = jsonArray.iterator();
                 while (jsonArrayIt.hasNext()) {
                     JSONObject jsonObject = (JSONObject) jsonArrayIt.next();
-                    map.put(jsonObject.getString("NILinkID"), xmlBean.getFlowLos());
+                    String losTemp = map.get(jsonObject.getString("NILinkID"));
+                    if(losTemp == null ||  "3".equals(xmlBean.getFlowLos())){
+                        map.put(jsonObject.getString("NILinkID"), xmlBean.getFlowLos());
+                    }else{
+                        System.out.println("NILinkID===="+jsonObject.getString("NILinkID")+"重复了"+"  losTemp="+losTemp);
+                    }
+
+//                    map.put(jsonObject.getString("NILinkID"), xmlBean.getFlowLos());
                 }
                 /*xmlBeanNew = new XmlBean();
                 BeanUtils.copyProperties(xmlBeanNew, xmlBean);
@@ -277,7 +284,7 @@ public class RticUtils {
                 xmlBeanNew.setInclude(jsonArray);
                 rlist.add(xmlBeanNew);*/
             } else {
-                System.out.println("PATH==" + RticUtils.PATH);
+//                System.out.println("PATH==" + RticUtils.PATH);
             }
 
         }

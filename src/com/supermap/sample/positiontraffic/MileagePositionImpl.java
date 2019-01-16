@@ -460,19 +460,29 @@ public class MileagePositionImpl implements MileagePosition, ComponentContextAwa
                     startObj = zhList.get(i * 2);
                     endObj = zhList.get(i * 2 + 1);
                     if (startObj != null && endObj != null) {// 实时路况点能够映射到年报地图，即能获取到桩号
-                        xmlBean.setStartzh(startObj.getZhTemp());
-                        xmlBean.setEndzh(endObj.getZhTemp());
+
                         xmlBean.setNid(startObj.getNid());
                         xmlBean.setRoadCode(startObj.getRoadCode());
                         xmlBean.setRoadName(startObj.getRoadName());
-                        //xmlBean.setStartPoint(String.valueOf(startObj.getStartPointX()) + "," + String.valueOf(startObj.getStartPointY()));
-                        //xmlBean.setEndPoint(String.valueOf(endObj.getEndPointX()) + "," + String.valueOf(endObj.getEndPointY()));
                         xmlBean.setBatch(startObj.getBatch());
                         xmlBean.setCreatetime(startObj.getCreatetime());
-                        xmlBean.setStartPoint(startObj.getPointTemp());
-                        xmlBean.setEndPoint(endObj.getPointTemp());
-                        xmlBean.setStartpoint_nb(startObj.getStartpoint_nb());
-                        xmlBean.setEndpoint_nb(endObj.getEndpoint_nb());
+                        //xmlBean.setStartPoint(String.valueOf(startObj.getStartPointX()) + "," + String.valueOf(startObj.getStartPointY()));
+                        //xmlBean.setEndPoint(String.valueOf(endObj.getEndPointX()) + "," + String.valueOf(endObj.getEndPointY()));
+                        if(startObj.getZhTemp() <= endObj.getZhTemp()){
+                            xmlBean.setStartzh(startObj.getZhTemp());
+                            xmlBean.setEndzh(endObj.getZhTemp());
+                            xmlBean.setStartPoint(startObj.getPointTemp());
+                            xmlBean.setEndPoint(endObj.getPointTemp());
+                            xmlBean.setStartpoint_nb(startObj.getStartpoint_nb());
+                            xmlBean.setEndpoint_nb(endObj.getEndpoint_nb());
+                        }else{
+                            xmlBean.setStartzh(endObj.getZhTemp());
+                            xmlBean.setEndzh(startObj.getZhTemp());
+                            xmlBean.setStartPoint(endObj.getPointTemp());
+                            xmlBean.setEndPoint(startObj.getPointTemp());
+                            xmlBean.setStartpoint_nb(endObj.getEndpoint_nb());
+                            xmlBean.setEndpoint_nb(startObj.getStartpoint_nb());
+                        }
                         list.set(i, xmlBean);
                     } else {
                         //list.remove(i);// 不能映射桩号，删除该条记录
